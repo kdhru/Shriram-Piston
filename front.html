@@ -1,0 +1,1254 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shriram Piston Limited</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100%;
+    }
+
+    html {
+      height: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .navbar {
+      background-color: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 1.25rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 3px solid #667eea;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-icon {
+      width: 60px;
+      height: 60px;
+      filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.2));
+    }
+
+    .company-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .company-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    .company-location {
+      font-size: 0.95rem;
+      color: #667eea;
+      margin: 0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .company-location::before {
+      content: "📍";
+      font-size: 0.85rem;
+    }
+
+    .date-display {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.85rem 2rem;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+      min-width: 220px;
+      text-align: center;
+      letter-spacing: 0.5px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .search-section {
+      background: linear-gradient(to bottom, #ffffff 0%, #f8f9ff 100%);
+      padding: 1.5rem 3rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border-bottom: 2px solid #e6e9f5;
+    }
+
+    .search-title {
+      display: none;
+    }
+
+    .search-form {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      flex: 1;
+      align-items: center;
+    }
+
+    .form-group {
+      position: relative;
+      min-width: 200px;
+    }
+
+    .form-label {
+      display: inline-block;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: #1a202c;
+      font-weight: 600;
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
+    .form-select,
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    .form-select:hover,
+    .form-input:hover {
+      border-color: #cbd5e0;
+    }
+
+    .form-select:focus,
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .autocomplete-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #667eea;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+      margin-top: -2px;
+    }
+
+    .autocomplete-dropdown.active {
+      display: block;
+    }
+
+    .autocomplete-item {
+      padding: 0.85rem 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #2d3748;
+      font-weight: 500;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover {
+      background: linear-gradient(to right, #f7fafc 0%, #edf2f7 100%);
+      padding-left: 1.5rem;
+      color: #667eea;
+    }
+
+    .autocomplete-item.highlighted {
+      background: linear-gradient(to right, #edf2f7 0%, #e6f0ff 100%);
+      color: #667eea;
+    }
+
+    .search-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.85rem 2.5rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .search-button:hover:not(:disabled)::before {
+      left: 100%;
+    }
+
+    .search-button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .search-button:active:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+    }
+
+    .result-message {
+      position: fixed;
+      top: 140px;
+      right: 2rem;
+      padding: 1rem 1.75rem;
+      border-radius: 12px;
+      font-weight: 700;
+      display: none;
+      z-index: 1001;
+      font-size: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      animation: slideIn 0.4s ease-out;
+      letter-spacing: 0.3px;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .result-message.success {
+      background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+      color: #22543d;
+      border: 2px solid #68d391;
+      display: block;
+    }
+
+    .result-message.success::before {
+      content: '✓ ';
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    .result-message.error {
+      background: linear-gradient(135deg, #fed7d7 0%, #fc8181 100%);
+      color: #742a2a;
+      border: 2px solid #f56565;
+      display: block;
+    }
+
+    .result-message.error::before {
+      content: '✗ ';
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    .content {
+      padding: 5rem 2rem;
+      text-align: center;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60%;
+    }
+
+    .content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 800;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+
+    .content p {
+      font-size: 1.5rem;
+      opacity: 0.95;
+      font-weight: 500;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.5px;
+    }
+
+    .content::before {
+      content: '⚙️';
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      display: block;
+      animation: rotate 10s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .results-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      display: none;
+    }
+
+    .results-container.active {
+      display: block;
+    }
+
+    .filter-section {
+      background: linear-gradient(to right, #ffffff 0%, #f8f9ff 100%);
+      padding: 1.75rem 2rem;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e6e9f5;
+      border-bottom: none;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .filter-label {
+      font-weight: 700;
+      color: #1a202c;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-label::before {
+      content: "🔍";
+      font-size: 1.1rem;
+    }
+
+    .filter-select {
+      flex: 1;
+      max-width: 350px;
+      padding: 0.85rem 1.25rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      font-weight: 500;
+    }
+
+    .filter-select:hover {
+      border-color: #cbd5e0;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 4px 8px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .table-container {
+      background-color: white;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      overflow-x: auto;
+      overflow-y: visible;
+      border: 1px solid #e6e9f5;
+      border-top: none;
+    }
+
+    .employee-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .employee-table thead {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      position: relative;
+    }
+
+    .employee-table thead::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0.3) 100%);
+    }
+
+    .employee-table th {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .employee-table th.date-column {
+      text-align: center;
+      min-width: 80px;
+      font-size: 0.85rem;
+    }
+
+    .employee-table th.name-column {
+      min-width: 200px;
+    }
+
+    .employee-table th.code-column {
+      min-width: 120px;
+    }
+
+    .table-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-search-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .table-search-input {
+      padding: 0.5rem 0.75rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      width: 200px;
+      transition: all 0.3s ease;
+    }
+
+    .table-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .table-search-input:focus {
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .employee-table tbody tr {
+      border-bottom: 1px solid #edf2f7;
+      transition: all 0.3s ease;
+    }
+
+    .employee-table tbody tr:hover {
+      background: linear-gradient(to right, #f7fafc 0%, #edf2f7 100%);
+      transform: scale(1.005);
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    }
+
+    .employee-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .employee-table tbody tr:nth-child(even) {
+      background-color: #fafbff;
+    }
+
+    .employee-table td {
+      padding: 1.15rem 1rem;
+      color: #2d3748;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .employee-table td.attendance-cell {
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .attendance-checkbox {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: #667eea;
+      transition: transform 0.2s ease;
+    }
+
+    .attendance-checkbox:hover {
+      transform: scale(1.15);
+    }
+
+    .attendance-checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .attendance-status {
+      display: inline-block;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .attendance-status.present {
+      background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+      color: #22543d;
+      border: 1px solid #9ae6b4;
+    }
+
+    .attendance-status.absent {
+      background: linear-gradient(135deg, #fed7d7 0%, #fc8181 100%);
+      color: #742a2a;
+      border: 1px solid #fc8181;
+    }
+
+    .date-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .date-day {
+      font-size: 0.75rem;
+      opacity: 0.95;
+      font-weight: 600;
+    }
+
+    .today-indicator {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 100%);
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-results {
+      padding: 3rem;
+      text-align: center;
+      color: #718096;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .company-name {
+        font-size: 1.2rem;
+      }
+
+      .date-display {
+        width: 100%;
+      }
+
+      .search-form {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .form-row {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+      }
+
+      .form-group {
+        min-width: 100%;
+      }
+
+      .search-section {
+        padding: 0.75rem 1rem;
+      }
+
+      .search-button {
+        width: 100%;
+      }
+
+      .result-message {
+        right: 1rem;
+        left: 1rem;
+      }
+
+      .content h1 {
+        font-size: 2rem;
+      }
+
+      .content p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <nav class="navbar">
+   <div class="logo-container">
+    <svg class="logo-icon" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="45" fill="#667eea" stroke="#764ba2" stroke-width="3" /> <circle cx="50" cy="50" r="30" fill="none" stroke="white" stroke-width="4" /> <circle cx="50" cy="50" r="15" fill="white" /> <rect x="47" y="20" width="6" height="15" fill="white" rx="2" /> <rect x="47" y="65" width="6" height="15" fill="white" rx="2" /> <rect x="20" y="47" width="15" height="6" fill="white" rx="2" /> <rect x="65" y="47" width="15" height="6" fill="white" rx="2" />
+    </svg>
+    <div class="company-info">
+     <h1 class="company-name" id="companyName">Shriram Piston Limited</h1>
+     <p class="company-location" id="companyLocation">Ghaziabad</p>
+    </div>
+   </div>
+   <div class="date-display" id="dateDisplay"></div>
+  </nav>
+  <div class="search-section">
+   <h2 class="search-title">Search Records</h2>
+   <form class="search-form" id="searchForm">
+    <div class="form-row">
+     <div class="form-group"><label for="yearSelect" class="form-label">Select Year</label> <select id="yearSelect" class="form-select" required> <option value="">-- Choose Year --</option> </select>
+     </div>
+     <div class="form-group"><label for="monthSelect" class="form-label">Select Month</label> <select id="monthSelect" class="form-select" required> <option value="">-- Choose Month --</option> <option value="January">January</option> <option value="February">February</option> <option value="March">March</option> <option value="April">April</option> <option value="May">May</option> <option value="June">June</option> <option value="July">July</option> <option value="August">August</option> <option value="September">September</option> <option value="October">October</option> <option value="November">November</option> <option value="December">December</option> </select>
+     </div>
+     <div class="form-group"><label for="PlantInput" class="form-label">Plant Number</label> <input type="text" id="PlantInput" class="form-input" placeholder="Enter Plant number..." autocomplete="off" required>
+      <div id="autocompleteDropdown" class="autocomplete-dropdown"></div>
+     </div>
+    </div><button type="submit" class="search-button" id="searchButton" disabled> <span id="searchButtonText">Search</span> </button>
+    <div id="resultMessage" class="result-message"></div>
+   </form>
+  </div>
+  <div class="results-container" id="resultsContainer">
+   <div class="filter-section">
+    <div class="filter-group"><label for="employeeTypeFilter" class="filter-label">Employee Type:</label> <select id="employeeTypeFilter" class="filter-select"> <option value="all">All Employees</option> <option value="staff">Staff</option> <option value="permanent">Permanent</option> <option value="dtl">DTL</option> <option value="substitute">Substitute</option> <option value="casual">Casual</option> <option value="contractor">Contractor</option> </select>
+    </div>
+   </div>
+   <div class="table-container">
+    <table class="employee-table">
+     <thead>
+      <tr id="tableHeaderRow">
+       <th class="name-column">
+        <div class="table-header-row"><span>Name</span>
+         <div class="table-search-container"><input type="text" id="nameSearchInput" class="table-search-input" placeholder="Search name..." autocomplete="off">
+         </div>
+        </div></th>
+       <th class="code-column">Code No.</th>
+      </tr>
+     </thead>
+     <tbody id="employeeTableBody">
+      <tr>
+       <td colspan="2" class="no-results">No results to display</td>
+      </tr>
+     </tbody>
+    </table>
+   </div>
+  </div>
+  <main class="content" id="welcomeContent">
+   <h1>Welcome to Shriram Piston Limited</h1>
+   <p>Excellence in Manufacturing</p>
+  </main>
+  <script>
+    const defaultConfig = {
+      company_name: "Shriram Piston Limited",
+      location: "Ghaziabad",
+      search_button_text: "Search",
+      primary_color: "#667eea",
+      secondary_color: "#764ba2",
+      background_color: "#ffffff",
+      text_color: "#2d3748",
+      accent_color: "#718096"
+    };
+
+    let config = { ...defaultConfig };
+
+    // Sample Plant numbers for autocomplete
+    const PlantNumbers = [
+      "101", "102", "103", "104", "105", "106", "107", "108", "109", "110",
+      "201", "202", "203", "204", "205", "206", "207", "208", "209", "210",
+      "301", "302", "303", "304", "305", "306", "307", "308", "309", "310",
+      "A-101", "A-102", "A-103", "B-201", "B-202", "B-203", "C-301", "C-302"
+    ];
+
+    // Sample employee data
+    const employeeData = [
+      { name: "Rajesh Kumar", code: "EMP001", type: "staff" },
+      { name: "Priya Sharma", code: "EMP002", type: "staff" },
+      { name: "Amit Singh", code: "EMP003", type: "permanent" },
+      { name: "Sunita Verma", code: "EMP004", type: "permanent" },
+      { name: "Vikram Patel", code: "EMP005", type: "permanent" },
+      { name: "Neha Gupta", code: "EMP006", type: "dtl" },
+      { name: "Rahul Mehta", code: "EMP007", type: "dtl" },
+      { name: "Anjali Reddy", code: "EMP008", type: "substitute" },
+      { name: "Sanjay Joshi", code: "EMP009", type: "substitute" },
+      { name: "Pooja Desai", code: "EMP010", type: "casual" },
+      { name: "Manoj Yadav", code: "EMP011", type: "casual" },
+      { name: "Kavita Nair", code: "EMP012", type: "contractor" },
+      { name: "Deepak Agarwal", code: "EMP013", type: "contractor" },
+      { name: "Ritu Malhotra", code: "EMP014", type: "staff" },
+      { name: "Arun Kapoor", code: "EMP015", type: "permanent" }
+    ];
+
+    // Generate dates for a specific month and year
+    function generateMonthDates(monthName, year) {
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+      const monthIndex = monthNames.indexOf(monthName);
+      
+      const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+      const dates = [];
+      
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, monthIndex, day);
+        dates.push(date);
+      }
+      
+      return dates;
+    }
+    
+    // Populate year dropdown with past 5 years and next 2 years
+    function populateYearDropdown() {
+      const yearSelect = document.getElementById('yearSelect');
+      const currentYear = new Date().getFullYear();
+      
+      for (let i = currentYear - 5; i <= currentYear + 2; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        if (i === currentYear) {
+          option.selected = true;
+        }
+        yearSelect.appendChild(option);
+      }
+    }
+
+    // Generate random past attendance (for demo purposes)
+    function generatePastAttendance(employeeCode, date) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      
+      if (checkDate >= today) {
+        return null; // Future dates have no attendance
+      }
+      
+      // Random attendance for past dates (80% present)
+      return Math.random() > 0.2;
+    }
+
+    let attendanceData = {};
+    let monthDates = [];
+
+    let currentEmployeeType = "all";
+    let currentNameSearch = "";
+
+    const yearSelect = document.getElementById('yearSelect');
+    const monthSelect = document.getElementById('monthSelect');
+    const PlantInput = document.getElementById('PlantInput');
+    const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+    const searchButton = document.getElementById('searchButton');
+    const searchForm = document.getElementById('searchForm');
+    const resultMessage = document.getElementById('resultMessage');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const welcomeContent = document.getElementById('welcomeContent');
+    const employeeTableBody = document.getElementById('employeeTableBody');
+    const employeeTypeFilter = document.getElementById('employeeTypeFilter');
+    const nameSearchInput = document.getElementById('nameSearchInput');
+
+    function updateDateTime() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const dateString = `DATE:- ${day}/${month}/${year}`;
+      document.getElementById('dateDisplay').textContent = dateString;
+    }
+
+    function checkFormValidity() {
+      const yearValid = yearSelect.value !== '';
+      const monthValid = monthSelect.value !== '';
+      const PlantValid = PlantInput.value.trim() !== '';
+      searchButton.disabled = !(yearValid && monthValid && PlantValid);
+    }
+
+    function filterPlantNumbers(input) {
+      if (!input) return [];
+      const lowerInput = input.toLowerCase();
+      return PlantNumbers.filter(Plant => 
+        Plant.toLowerCase().includes(lowerInput)
+      ).slice(0, 10); // Limit to 10 results
+    }
+
+    function showAutocomplete(matches) {
+      autocompleteDropdown.innerHTML = '';
+      
+      if (matches.length === 0) {
+        autocompleteDropdown.classList.remove('active');
+        return;
+      }
+
+      matches.forEach(match => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.textContent = match;
+        item.addEventListener('click', () => {
+          PlantInput.value = match;
+          autocompleteDropdown.classList.remove('active');
+          checkFormValidity();
+        });
+        autocompleteDropdown.appendChild(item);
+      });
+
+      autocompleteDropdown.classList.add('active');
+    }
+
+    PlantInput.addEventListener('input', (e) => {
+      const value = e.target.value;
+      const matches = filterPlantNumbers(value);
+      showAutocomplete(matches);
+      checkFormValidity();
+    });
+
+    PlantInput.addEventListener('focus', (e) => {
+      const value = e.target.value;
+      if (value) {
+        const matches = filterPlantNumbers(value);
+        showAutocomplete(matches);
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!PlantInput.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+        autocompleteDropdown.classList.remove('active');
+      }
+    });
+
+    yearSelect.addEventListener('change', checkFormValidity);
+    monthSelect.addEventListener('change', checkFormValidity);
+
+    function formatDate(date) {
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      return `${day}/${month}`;
+    }
+
+    function getDayName(date) {
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      return days[date.getDay()];
+    }
+
+    function isToday(date) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() === today.getTime();
+    }
+    
+    function isFutureDate(date) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() > today.getTime();
+    }
+    
+    function isPastDate(date) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() < today.getTime();
+    }
+
+    function createTableHeaders() {
+      const headerRow = document.getElementById('tableHeaderRow');
+      
+      // Keep name and code columns, add date columns
+      const dateHeaders = monthDates.map(date => {
+        const isTodayDate = isToday(date);
+        return `
+          <th class="date-column">
+            <div class="date-header">
+              <span>${formatDate(date)}</span>
+              <span class="date-day">${getDayName(date)}</span>
+              ${isTodayDate ? '<span class="today-indicator">TODAY</span>' : ''}
+            </div>
+          </th>
+        `;
+      }).join('');
+      
+      // Add date columns after code column
+      headerRow.innerHTML = `
+        <th class="name-column">
+          <div class="table-header-row">
+            <span>Name</span>
+            <div class="table-search-container">
+              <input 
+                type="text" 
+                id="nameSearchInput" 
+                class="table-search-input" 
+                placeholder="Search name..."
+                autocomplete="off"
+              />
+            </div>
+          </div>
+        </th>
+        <th class="code-column">Code No.</th>
+        ${dateHeaders}
+      `;
+      
+      // Re-attach event listener to the new search input
+      const newSearchInput = document.getElementById('nameSearchInput');
+      newSearchInput.addEventListener('input', (e) => {
+        currentNameSearch = e.target.value.trim();
+        filterAndDisplayEmployees();
+      });
+    }
+
+    function handleAttendanceChange(employeeCode, date, isPresent) {
+      const dateKey = date.toISOString().split('T')[0];
+      if (!attendanceData[employeeCode]) {
+        attendanceData[employeeCode] = {};
+      }
+      attendanceData[employeeCode][dateKey] = isPresent;
+    }
+
+    function getAttendanceStatus(employeeCode, date) {
+      const dateKey = date.toISOString().split('T')[0];
+      if (attendanceData[employeeCode] && attendanceData[employeeCode][dateKey] !== undefined) {
+        return attendanceData[employeeCode][dateKey];
+      }
+      
+      // For past dates, generate random attendance
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      
+      if (checkDate < today) {
+        const pastAttendance = generatePastAttendance(employeeCode, date);
+        if (!attendanceData[employeeCode]) {
+          attendanceData[employeeCode] = {};
+        }
+        attendanceData[employeeCode][dateKey] = pastAttendance;
+        return pastAttendance;
+      }
+      
+      return null;
+    }
+
+    function filterAndDisplayEmployees() {
+      let filteredEmployees = currentEmployeeType === 'all' 
+        ? employeeData 
+        : employeeData.filter(emp => emp.type === currentEmployeeType);
+
+      // Apply name search filter
+      if (currentNameSearch) {
+        const searchLower = currentNameSearch.toLowerCase();
+        filteredEmployees = filteredEmployees.filter(emp => 
+          emp.name.toLowerCase().includes(searchLower) || 
+          emp.code.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Sort to show matching results first
+      if (currentNameSearch) {
+        const searchLower = currentNameSearch.toLowerCase();
+        filteredEmployees.sort((a, b) => {
+          const aNameMatch = a.name.toLowerCase().startsWith(searchLower);
+          const bNameMatch = b.name.toLowerCase().startsWith(searchLower);
+          const aCodeMatch = a.code.toLowerCase().startsWith(searchLower);
+          const bCodeMatch = b.code.toLowerCase().startsWith(searchLower);
+          
+          if ((aNameMatch || aCodeMatch) && !(bNameMatch || bCodeMatch)) return -1;
+          if (!(aNameMatch || aCodeMatch) && (bNameMatch || bCodeMatch)) return 1;
+          return 0;
+        });
+      }
+
+      employeeTableBody.innerHTML = '';
+
+      if (filteredEmployees.length === 0) {
+        const colspan = 2 + monthDates.length;
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="${colspan}" class="no-results">No employees found</td>`;
+        employeeTableBody.appendChild(row);
+      } else {
+        filteredEmployees.forEach(employee => {
+          const row = document.createElement('tr');
+          
+          // Name and code columns
+          let rowHTML = `
+            <td>${employee.name}</td>
+            <td>${employee.code}</td>
+          `;
+          
+          // Attendance columns for each date
+          monthDates.forEach(date => {
+            const isTodayDate = isToday(date);
+            const isFuture = isFutureDate(date);
+            const isPast = isPastDate(date);
+            const attendanceStatus = getAttendanceStatus(employee.code, date);
+            
+            if (isTodayDate) {
+              // Today: show checkbox for marking attendance
+              const checked = attendanceStatus === true ? 'checked' : '';
+              rowHTML += `
+                <td class="attendance-cell">
+                  <input 
+                    type="checkbox" 
+                    class="attendance-checkbox" 
+                    data-employee="${employee.code}" 
+                    data-date="${date.toISOString()}"
+                    ${checked}
+                  />
+                </td>
+              `;
+            } else if (isFuture) {
+              // Future dates: empty
+              rowHTML += `<td class="attendance-cell">-</td>`;
+            } else if (isPast) {
+              // Past dates: show status
+              if (attendanceStatus === true) {
+                rowHTML += `<td class="attendance-cell"><span class="attendance-status present">P</span></td>`;
+              } else if (attendanceStatus === false) {
+                rowHTML += `<td class="attendance-cell"><span class="attendance-status absent">A</span></td>`;
+              } else {
+                rowHTML += `<td class="attendance-cell">-</td>`;
+              }
+            }
+          });
+          
+          row.innerHTML = rowHTML;
+          employeeTableBody.appendChild(row);
+        });
+        
+        // Attach event listeners to checkboxes
+        document.querySelectorAll('.attendance-checkbox').forEach(checkbox => {
+          checkbox.addEventListener('change', (e) => {
+            const employeeCode = e.target.dataset.employee;
+            const date = new Date(e.target.dataset.date);
+            const isPresent = e.target.checked;
+            handleAttendanceChange(employeeCode, date, isPresent);
+          });
+        });
+      }
+    }
+
+    employeeTypeFilter.addEventListener('change', (e) => {
+      currentEmployeeType = e.target.value;
+      filterAndDisplayEmployees();
+    });
+
+    nameSearchInput.addEventListener('input', (e) => {
+      currentNameSearch = e.target.value.trim();
+      filterAndDisplayEmployees();
+    });
+
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const year = parseInt(yearSelect.value);
+      const month = monthSelect.value;
+      const PlantNo = PlantInput.value.trim();
+
+      if (year && month && PlantNo) {
+        resultMessage.className = 'result-message success';
+        resultMessage.textContent = `✓ Search completed for Plant ${PlantNo} in ${month} ${year}`;
+        
+        // Show results table and hide welcome content
+        welcomeContent.style.display = 'none';
+        resultsContainer.classList.add('active');
+        
+        // Generate dates for the selected month and year, then create headers
+        monthDates = generateMonthDates(month, year);
+        createTableHeaders();
+        
+        // Reset filters and display all employees
+        currentEmployeeType = 'all';
+        currentNameSearch = '';
+        employeeTypeFilter.value = 'all';
+        const searchInput = document.getElementById('nameSearchInput');
+        if (searchInput) searchInput.value = '';
+        filterAndDisplayEmployees();
+        
+        // Simulate search - in real application, this would fetch data
+        console.log(`Searching for Plant: ${PlantNo}, Month: ${month}, Year: ${year}`);
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          resultMessage.style.display = 'none';
+        }, 3000);
+      } else {
+        resultMessage.className = 'result-message error';
+        resultMessage.textContent = '✗ Please fill in all fields';
+        
+        setTimeout(() => {
+          resultMessage.style.display = 'none';
+        }, 3000);
+      }
+    });
+
+    async function onConfigChange(newConfig) {
+      config = { ...config, ...newConfig };
+      
+      const companyName = config.company_name || defaultConfig.company_name;
+      const location = config.location || defaultConfig.location;
+      const searchButtonText = config.search_button_text || defaultConfig.search_button_text;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+
+      document.getElementById('companyName').textContent = companyName;
+      document.getElementById('companyLocation').textContent = location;
+      document.getElementById('searchButtonText').textContent = searchButtonText;
+
+      document.querySelector('.navbar').style.backgroundColor = backgroundColor;
+      document.querySelector('.search-section').style.backgroundColor = backgroundColor;
+      document.querySelector('.company-name').style.color = textColor;
+      document.querySelector('.company-location').style.color = accentColor;
+      document.querySelector('.search-title').style.color = textColor;
+      
+      const labels = document.querySelectorAll('.form-label');
+      labels.forEach(label => label.style.color = textColor);
+
+      const logoCircle = document.querySelector('.logo-icon circle:first-child');
+      logoCircle.setAttribute('fill', primaryColor);
+      logoCircle.setAttribute('stroke', secondaryColor);
+
+      const dateDisplay = document.getElementById('dateDisplay');
+      dateDisplay.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+
+      const searchBtn = document.querySelector('.search-button');
+      searchBtn.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+
+      document.body.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.primary_color || defaultConfig.primary_color,
+              set: (value) => {
+                config.primary_color = value;
+                window.elementSdk.setConfig({ primary_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_color || defaultConfig.secondary_color,
+              set: (value) => {
+                config.secondary_color = value;
+                window.elementSdk.setConfig({ secondary_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.accent_color || defaultConfig.accent_color,
+              set: (value) => {
+                config.accent_color = value;
+                window.elementSdk.setConfig({ accent_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["company_name", config.company_name || defaultConfig.company_name],
+          ["location", config.location || defaultConfig.location],
+          ["search_button_text", config.search_button_text || defaultConfig.search_button_text]
+        ])
+      });
+
+      config = window.elementSdk.config;
+    }
+
+    populateYearDropdown();
+    updateDateTime();
+    setInterval(updateDateTime, 60000);
+
+    onConfigChange(config);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99bbc23341eab2d3',t:'MTc2MjY3NTAzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
